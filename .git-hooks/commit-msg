@@ -1,0 +1,15 @@
+#!/bin/sh
+msg_file=$1
+msg_content="$(cat $msg_file)"
+pattern=".*"
+RED='\033[41m'
+GREEN='\033[42m'
+NC='\033[0m'
+if ! [[ $msg_content =~ pattern ]]; then
+  echo "Check commit message ...................................${RED}FAILED${NC}"
+  echo "Invalid commit message"
+  echo "Commt message must meet the following pattern: $pattern"
+  exit 1
+else
+  echo "Check commit message ...................................${GREEN}PASSED${NC}"
+fi

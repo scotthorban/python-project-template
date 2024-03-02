@@ -1,0 +1,27 @@
+repos:
+#  - repo: local
+#    hooks:
+#      - id: validate-commit-msg
+#        name: Check commit message for Jira ticket number prefix
+#        language: pygrep
+#        entry: 'validate-commit-msg'
+#        args: [ --multiline ]
+#        stages: [ commit-msg ]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+      - id: check-yaml
+        exclude: .*/tests/.*
+#      - id: trailing-whitespace
+#        exclude: (.*/tests/.*)|(*.md)
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: [ '--baseline', '.secrets.baseline.json' ]
+        exclude: .*/tests/.*
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        name: isort (python)
