@@ -34,3 +34,7 @@ data
 
 # Tox
 .tox
+
+# Reports
+reports
+reports/*
