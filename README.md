@@ -1,6 +1,10 @@
 ## Python Project Template
 
-`Badges to go here`
+![](docs/img/python.svg)
+![](docs/img/unittest.svg)
+![](docs/img/coverage.svg)
+![](docs/img/pylint.svg)
+![](docs/img/release.svg)
 
 ### 1. Description
 
