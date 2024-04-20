@@ -30,15 +30,9 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.taskipy.tasks]
 install_hooks = { cmd = """
-echo "Removing commit-msg if it already exists"
-if [ -f .git/hooks/commit-msg ]; then
-    rm .git/hooks/commit-msg
-    echo "commit-msg removed"
-fi
-echo "Creating symlink in .git/hooks to .git-hooks/commit-msg"
-cd .git/hooks; ln -s ../../.git-hooks/commit-msg commit-msg; cd ../..
 chmod u+x .git/hooks/*
-pre-commit install""", help = "Install all pre-commit hooks stored in .git-hooks" }
+pre-commit install
+pre-commit install --hook-type commit-msg""", help = "Install all pre-commit hooks stored in .git-hooks" }
 
 detect_secrets_scan = { cmd = "detect-secrets scan --baseline .secrets.baseline.json", help = """Updates the .secrets.baseline.json file with any newly detected secrets"""}
 audit_secrets = { cmd = "detect-secrets audit .secrets.baseline.json", help = """Runs a command line tool to allow the user to manually flag detected secrets as false positives"""}
