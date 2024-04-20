@@ -1,12 +1,10 @@
 repos:
-#  - repo: local
-#    hooks:
-#      - id: validate-commit-msg
-#        name: Check commit message for Jira ticket number prefix
-#        language: pygrep
-#        entry: 'validate-commit-msg'
-#        args: [ --multiline ]
-#        stages: [ commit-msg ]
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.2.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: []
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.3.0
     hooks:
