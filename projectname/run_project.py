@@ -2,7 +2,8 @@
 Example docstring for file.
 """
 
-def main() -> None:
+
+def main() -> int:
     """
     Example docstring for main method
     """
