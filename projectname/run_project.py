@@ -1,5 +1,5 @@
 """
-Example docstring for file.
+Example docstring for file
 """
 
 
