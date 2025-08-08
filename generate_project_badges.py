@@ -1,3 +1,4 @@
+import json
 import os
 import xml.etree.ElementTree as ET
 from datetime import datetime
@@ -14,19 +15,19 @@ def get_python_version():
     return "3.11"
 
 
-def get_linter_score():
+def get_ruff_result() -> str:
     """
-    Read and return PyLint score from PROJECT_ROOT_DIR/reports/linting.txt
+    Read and return Ruff result from PROJECT_ROOT_DIR/reports/linting.txt
     """
-    linting_report_path = PROJECT_ROOT_DIR.joinpath("reports/linting.txt")
-    with open(linting_report_path, "r") as linting_file:
-        lines = linting_file.readlines()
+    report_path = PROJECT_ROOT_DIR.joinpath("reports/ruff.json")
+    with open(report_path, "r") as linting_file:
+        content = json.load(fp=linting_file)
 
-    score = lines[-2].strip().split("at ")[-1].split(' (')[0].replace("/10", "")
-    return score
+    result = "Passing" if content == [] else "Failing"
+    return result
 
 
-def get_unittest_results():
+def get_unittest_results() -> str:
     """
     Read and return test results from PROJECT_ROOT_DIR/reports/unit-tests.xml
     """
@@ -54,19 +55,19 @@ def get_unittest_results():
     return text
 
 
-def get_coverage_score():
+def get_coverage_score() -> float:
     """
     Read and return Coverage from PROJECT_ROOT_DIR/reports/coverage.xml
     """
     coverage_report_path = PROJECT_ROOT_DIR.joinpath("reports/coverage.xml")
     root = ET.parse(coverage_report_path).getroot()
-    coverage_score = root.attrib['line-rate']
+    coverage_score = root.attrib["line-rate"]
     return round(100.0 * float(coverage_score), 1)
 
 
-def make_badges():
+def make_badges() -> None:
     """
-    Create badges from python version, linter score, unittest results, coverage 
+    Create badges from python version, linter score, unittest results, coverage
     score and latest release month & year
     """
     red = "#be403c"
@@ -80,9 +81,7 @@ def make_badges():
             if "python.svg" in os.listdir(IMG_PATH):
                 os.remove(f"{IMG_PATH}/python.svg")
 
-        os.system(
-            f'anybadge -l python -v "{python_version}" -f "{IMG_PATH}/python.svg" --color="#0f5fa5"'
-        )
+        os.system(f'uv run anybadge -l python -v "{python_version}" -f "{IMG_PATH}/python.svg" --color="#0f5fa5"')
 
     except Exception as exception:
         print(str(exception))
@@ -96,18 +95,15 @@ def make_badges():
 
             if "failed" in unittest_results:
                 os.system(
-                    f'anybadge -l unittest -v "{unittest_results}" -f '
-                    f'"{IMG_PATH}/unittest.svg" --color={red}'
+                    f'uv run anybadge -l unittest -v "{unittest_results}" -f "{IMG_PATH}/unittest.svg" --color={red}'
                 )
             elif "skipped" in unittest_results:
                 os.system(
-                    f'anybadge -l unittest -v "{unittest_results}" -f '
-                    f'"{IMG_PATH}/unittest.svg" --color={warn}'
+                    f'uv run anybadge -l unittest -v "{unittest_results}" -f "{IMG_PATH}/unittest.svg" --color={warn}'
                 )
             else:
                 os.system(
-                    f'anybadge -l unittest -v "{unittest_results}" -f '
-                    f'"{IMG_PATH}/unittest.svg" --color={green}'
+                    f'uv run anybadge -l unittest -v "{unittest_results}" -f "{IMG_PATH}/unittest.svg" --color={green}'
                 )
 
     except Exception as exception:
@@ -120,25 +116,20 @@ def make_badges():
             if "coverage.svg" in os.listdir(IMG_PATH):
                 os.remove(f"{IMG_PATH}/coverage.svg")
 
-            os.system(
-                f'anybadge --value={coverage_score} -f "{IMG_PATH}/coverage.svg" '
-                f'coverage'
-            )
+            os.system(f'uv run anybadge --value={coverage_score} -f "{IMG_PATH}/coverage.svg" coverage')
 
     except Exception as exception:
         print(str(exception))
 
-    print("Generating PyLint badge")
+    print("Generating Ruff badge")
     try:
-        pylint_score = get_linter_score()
-        if pylint_score:
+        ruff_result = get_ruff_result()
+        if ruff_result:
             if "pylint.svg" in os.listdir(IMG_PATH):
-                os.remove(f"{IMG_PATH}/pylint.svg")
+                os.remove(f"{IMG_PATH}/ruff.svg")
 
-            os.system(
-                f'anybadge -l pylint -v "{pylint_score}" -f "{IMG_PATH}/pylint.svg" '
-                f'6=red 7=orange 8=yellow 9=green'
-            )
+            color = "green" if ruff_result == "Passing" else "red"
+            os.system(f'uv run anybadge -l ruff -v "{ruff_result}" -f "{IMG_PATH}/ruff.svg" --color={color}')
 
     except Exception as exception:
         print(str(exception))
@@ -152,8 +143,7 @@ def make_badges():
         current_year = datetime.now().year
 
         os.system(
-            f'anybadge -l "released" -v "{current_month} {current_year}" -f '
-            f'"{IMG_PATH}/release.svg" --color="#0f5fa5"'
+            f'uv run anybadge -l "released" -v "{current_month} {current_year}" -f "{IMG_PATH}/release.svg" --color="#0f5fa5"'
         )
 
     except Exception as exception:
