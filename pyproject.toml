@@ -1,38 +1,54 @@
-[tool.poetry]
+[project]
 name = "python-project-template"
-version = "0.1.0"
+version = "2.0.0"
 description = "Python project template repository"
 authors = ["scotthorban <scotthorban@gmail.com>"]
 readme = "README.md"
+requires-python = ">=3.11.8"
+dependencies = []
 
-[tool.poetry.dependencies]
-python = "^3.11"
+[dependency-groups]
+dev = [
+    "anybadge>=1.16.0",
+    "detect-secrets>=1.5.0",
+    "pre-commit>=4.2.0",
+    "pytest>=8.4.1",
+    "pytest-cov>=6.2.1",
+    "ruff>=0.12.8",
+    "taskipy>=1.14.1",
+    "typing-extensions>=4.14.1",
+]
 
-[tool.poetry.group.dev.dependencies]
-taskipy = "^1.12.2"
-pre-commit = "^3.6.0"
-detect-secrets = "^1.4.0"
-pytest = "^8.0.0"
-pytest-cov = "^4.1.0"
-pylint = "^3.0.3"
-typing-extensions = "^4.10.0"
-isort = "^5.13.2"
-tox = "^4.12.1"
-anybadge = "^1.14.0"
+[tool.ruff]
+line-length = 120
+target-version = "py311"
 
-[[tool.poetry.source]]
-name = "PyPI"
-priority = "primary"
+[tool.ruff.lint]
+select = [
+    "I", # isort
+    "G004", # forbid f-strings in logger calls,
+    "NPY", # numpy-specific rules
+]
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.ruff.lint.isort]
+case-sensitive = true
+combine-as-imports = true
+
+[tool.ruff.format]
+docstring-code-format = true
 
 [tool.taskipy.tasks]
-install_hooks = { cmd = """
-chmod u+x .git/hooks/*
-pre-commit install
-pre-commit install --hook-type commit-msg""", help = "Install all pre-commit hooks stored in .git-hooks" }
+install-hooks = { cmd = "pre-commit install --hook-type pre-commit --hook-type commit-msg", help = "Install all pre-commit hooks stored in .git-hooks" }
 
-detect_secrets_scan = { cmd = "detect-secrets scan --baseline .secrets.baseline.json", help = """Updates the .secrets.baseline.json file with any newly detected secrets"""}
-audit_secrets = { cmd = "detect-secrets audit .secrets.baseline.json", help = """Runs a command line tool to allow the user to manually flag detected secrets as false positives"""}
+detect-secrets-scan = { cmd = "detect-secrets scan --baseline .secrets.baseline.json", help = """Updates the .secrets.baseline.json file with any newly detected secrets"""}
+audit-secrets = { cmd = "detect-secrets audit .secrets.baseline.json", help = """Runs a command line tool to allow the user to manually flag detected secrets as false positives"""}
+
+unit = { cmd = "pytest -v tests/unit tests/functional --show-capture=no --disable-pytest-warnings --junitxml=reports/unit-tests.xml", help = "Run unit tests"}
+coverage = { cmd = "pytest --cov src tests/unit tests/functional --cov-config=.coveragerc --cov-report term-missing --cov-fail-under=80 --cov-report xml:reports/coverage.xml", help = "Run unit test coverage" }
+check-lint = { cmd = "ruff check; ruff check --output-file reports/ruff.json --output-format json", help = "Run ruff linter" }
+lint = { cmd = "ruff check --fix", help = "Run ruff linter and attempt to auto-fix issues" }
+check-format = { cmd = "ruff format --diff", help = "View ruff formatting diff" }
+format = { cmd = "ruff format", help = "Format code using ruff" }
+badge = { cmd = "python generate_project_badges.py", help = "Generate project badges for README.md" }
+
+tests = { cmd = "task unit && task coverage && task check-lint && task check-format && task badge", help = "" }
