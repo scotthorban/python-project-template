@@ -6,6 +6,7 @@ This project adheres to [semantic versioning](https://semver.org/).
 
 ## 2.1.0
 - Adds a GitHub actions job to create a git tag and a GitHub Release when merging to `main`.
+- Removes redundant "Setup python version" step from test GitHub actions job
 
 ## 2.0.0
 - Replace poetry with uv and tox with uv taskipy.
