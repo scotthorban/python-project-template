@@ -1,9 +1,10 @@
 name: Generate Git Tag and GitHub Release
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: [ "Run CI via uv" ]
+    types:
+      - completed
   workflow_dispatch:
 
 jobs:
