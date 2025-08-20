@@ -3,8 +3,7 @@
 
 def main() -> int:
     """Example docstring for main method."""
-    my_variable = 1
-    return my_variable
+    return 1
 
 
 if __name__ == "__main__":
