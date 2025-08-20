@@ -1,6 +1,4 @@
-"""
-Definitions contains project-level constants specific to this repository.
-"""
+"""Definitions contains project-level constants specific to this repository."""
 
 from pathlib import Path
 

@@ -1,3 +1,5 @@
+"""A script to generate project badges designed for use in a README.md file."""
+
 import json
 import os
 import xml.etree.ElementTree as ET
@@ -9,16 +11,12 @@ IMG_PATH = PROJECT_ROOT_DIR.joinpath("docs/img")
 
 
 def get_python_version():
-    """
-    Return Python version
-    """
+    """Return Python version."""
     return "3.11"
 
 
 def get_ruff_result() -> str:
-    """
-    Read and return Ruff result from PROJECT_ROOT_DIR/reports/linting.txt
-    """
+    """Read and return Ruff result from PROJECT_ROOT_DIR/reports/linting.txt."""
     report_path = PROJECT_ROOT_DIR.joinpath("reports/ruff.json")
     with open(report_path, "r") as linting_file:
         content = json.load(fp=linting_file)
@@ -28,9 +26,7 @@ def get_ruff_result() -> str:
 
 
 def get_unittest_results() -> str:
-    """
-    Read and return test results from PROJECT_ROOT_DIR/reports/unit-tests.xml
-    """
+    """Read and return test results from PROJECT_ROOT_DIR/reports/unit-tests.xml."""
     test_report_path = PROJECT_ROOT_DIR.joinpath("reports/unit-tests.xml")
     root = ET.parse(test_report_path).getroot()
 
@@ -56,9 +52,7 @@ def get_unittest_results() -> str:
 
 
 def get_coverage_score() -> float:
-    """
-    Read and return Coverage from PROJECT_ROOT_DIR/reports/coverage.xml
-    """
+    """Read and return Coverage from PROJECT_ROOT_DIR/reports/coverage.xml."""
     coverage_report_path = PROJECT_ROOT_DIR.joinpath("reports/coverage.xml")
     root = ET.parse(coverage_report_path).getroot()
     coverage_score = root.attrib["line-rate"]
@@ -66,10 +60,7 @@ def get_coverage_score() -> float:
 
 
 def make_badges() -> None:
-    """
-    Create badges from python version, linter score, unittest results, coverage
-    score and latest release month & year
-    """
+    """Create badges from python version, linter score, unittest results, coverage score and latest release month & year."""
     red = "#be403c"
     warn = "#c8991d"
     green = "#00a10b"

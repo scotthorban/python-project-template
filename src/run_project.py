@@ -1,12 +1,8 @@
-"""
-Example docstring for file
-"""
+"""Example docstring for file."""
 
 
 def main() -> int:
-    """
-    Example docstring for main method
-    """
+    """Example docstring for main method."""
     my_variable = 1
     return my_variable
 

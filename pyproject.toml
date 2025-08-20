@@ -1,6 +1,6 @@
 [project]
 name = "python-project-template"
-version = "2.1.0"
+version = "2.2.0"
 description = "Python project template repository"
 authors = ["scotthorban <scotthorban@gmail.com>"]
 readme = "README.md"
@@ -25,14 +25,22 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = [
+    "D", # pydocstyle
     "I", # isort
     "G004", # forbid f-strings in logger calls,
     "NPY", # numpy-specific rules
+]
+ignore = [
+    "D100", # pydocstyle missing docstring in public module
+    "D104", # pydocstyle missing docstring in public package
 ]
 
 [tool.ruff.lint.isort]
 case-sensitive = true
 combine-as-imports = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.ruff.format]
 docstring-code-format = true
