@@ -141,6 +141,8 @@ def make_badges() -> None:
                 "uv",
                 "run",
                 "anybadge",
+                "-l",
+                "coverage",
                 "-v",
                 coverage_score,
                 "-f",
