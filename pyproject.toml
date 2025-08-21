@@ -1,11 +1,15 @@
 [project]
 name = "python-project-template"
-version = "2.1.0"
+version = "2.2.0"
 description = "Python project template repository"
-authors = ["scotthorban <scotthorban@gmail.com>"]
+authors = [
+    {name="scotthorban", email="scotthorban@gmail.com"}
+]
 readme = "README.md"
 requires-python = ">=3.11.8"
-dependencies = []
+dependencies = [
+    "defusedxml>=0.7.1",
+]
 
 [dependency-groups]
 dev = [
@@ -25,17 +29,29 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = [
-    "I", # isort
-    "G004", # forbid f-strings in logger calls,
-    "NPY", # numpy-specific rules
+    "ALL"
 ]
+ignore = [
+    "COM812", # flake8 commas: Trailing comma missing (incompatible with ruff formatter)
+    "D100", # pydocstyle: Missing docstring in public module
+    "D104", # pydocstyle: Missing docstring in public package
+]
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101"] # flake8 bandit: Use of assert detected (disabling allows asserts in tests)
 
 [tool.ruff.lint.isort]
 case-sensitive = true
 combine-as-imports = true
 
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
 [tool.ruff.format]
 docstring-code-format = true
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
 
 [tool.taskipy.tasks]
 install-hooks = { cmd = "pre-commit install --hook-type pre-commit --hook-type commit-msg", help = "Install all pre-commit hooks stored in .git-hooks" }

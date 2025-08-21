@@ -1,38 +1,62 @@
+"""A script to generate project badges designed for use in a README.md file."""
+
 import json
-import os
-import xml.etree.ElementTree as ET
-from datetime import datetime
+import subprocess
+from datetime import UTC, datetime
+from pathlib import Path
+
+from defusedxml import ElementTree
 
 from definitions import PROJECT_ROOT_DIR
 
 IMG_PATH = PROJECT_ROOT_DIR.joinpath("docs/img")
 
 
-def get_python_version():
+def make_badge(label: str, value: str, filename: str, color: str) -> None:
+    """Creates a badge using the given label, value and color, saving the result to filename.
+
+    Parameters:
+        label (str): The label of the badge.
+        value (str): The value of the badge.
+        filename (str): The filename where the badge will be saved.
+        color (str): The color of the badge.
     """
-    Return Python version
-    """
+    subprocess.run(
+        args=[
+            "uv",
+            "run",
+            "anybadge",
+            "-l",
+            label,
+            "-v",
+            str(value),
+            "-f",
+            filename,
+            "--color",
+            color,
+        ],
+        check=False,
+    )
+
+
+def get_python_version() -> str:
+    """Return Python version."""
     return "3.11"
 
 
 def get_ruff_result() -> str:
-    """
-    Read and return Ruff result from PROJECT_ROOT_DIR/reports/linting.txt
-    """
+    """Read and return Ruff result from PROJECT_ROOT_DIR/reports/linting.txt."""
     report_path = PROJECT_ROOT_DIR.joinpath("reports/ruff.json")
-    with open(report_path, "r") as linting_file:
+    with Path.open(report_path) as linting_file:
         content = json.load(fp=linting_file)
 
-    result = "Passing" if content == [] else "Failing"
-    return result
+    return "Passing" if content == [] else "Failing"
 
 
 def get_unittest_results() -> str:
-    """
-    Read and return test results from PROJECT_ROOT_DIR/reports/unit-tests.xml
-    """
+    """Read and return test results from PROJECT_ROOT_DIR/reports/unit-tests.xml."""
     test_report_path = PROJECT_ROOT_DIR.joinpath("reports/unit-tests.xml")
-    root = ET.parse(test_report_path).getroot()
+    root = ElementTree.parse(test_report_path).getroot()
 
     failures = 0
     skipped = 0
@@ -55,99 +79,101 @@ def get_unittest_results() -> str:
     return text
 
 
-def get_coverage_score() -> float:
-    """
-    Read and return Coverage from PROJECT_ROOT_DIR/reports/coverage.xml
-    """
+def get_coverage_score() -> str:
+    """Read and return Coverage from PROJECT_ROOT_DIR/reports/coverage.xml."""
     coverage_report_path = PROJECT_ROOT_DIR.joinpath("reports/coverage.xml")
-    root = ET.parse(coverage_report_path).getroot()
+    root = ElementTree.parse(coverage_report_path).getroot()
     coverage_score = root.attrib["line-rate"]
-    return round(100.0 * float(coverage_score), 1)
+    if coverage_score == "1":
+        return "100%"
+
+    return f"{round(100.0 * float(coverage_score), 1)}%"
 
 
 def make_badges() -> None:
-    """
-    Create badges from python version, linter score, unittest results, coverage
-    score and latest release month & year
-    """
+    """Creates all project badges."""
     red = "#be403c"
     warn = "#c8991d"
     green = "#00a10b"
 
-    print("Generating Python badge")
-    try:
-        python_version = get_python_version()
-        if python_version:
-            if "python.svg" in os.listdir(IMG_PATH):
-                os.remove(f"{IMG_PATH}/python.svg")
+    python_version = get_python_version()
+    Path(f"{IMG_PATH}/python.svg").unlink(missing_ok=True)
 
-        os.system(f'uv run anybadge -l python -v "{python_version}" -f "{IMG_PATH}/python.svg" --color="#0f5fa5"')
+    make_badge(
+        label="python",
+        value=python_version,
+        filename=f"{IMG_PATH}/python.svg",
+        color="#0f5fa5",
+    )
 
-    except Exception as exception:
-        print(str(exception))
+    unittest_results = get_unittest_results()
+    if unittest_results:
+        Path(f"{IMG_PATH}/unittest.svg").unlink(missing_ok=True)
 
-    print("Generating Unittest badge")
-    try:
-        unittest_results = get_unittest_results()
-        if unittest_results:
-            if "unittest.svg" in os.listdir(IMG_PATH):
-                os.remove(f"{IMG_PATH}/unittest.svg")
+        if "failed" in unittest_results:
+            make_badge(
+                label="unittest",
+                value=unittest_results,
+                filename=f"{IMG_PATH}/unittest.svg",
+                color=red,
+            )
+        elif "skipped" in unittest_results:
+            make_badge(
+                label="unittest",
+                value=unittest_results,
+                filename=f"{IMG_PATH}/unittest.svg",
+                color=warn,
+            )
+        else:
+            make_badge(
+                label="unittest",
+                value=unittest_results,
+                filename=f"{IMG_PATH}/unittest.svg",
+                color=green,
+            )
 
-            if "failed" in unittest_results:
-                os.system(
-                    f'uv run anybadge -l unittest -v "{unittest_results}" -f "{IMG_PATH}/unittest.svg" --color={red}'
-                )
-            elif "skipped" in unittest_results:
-                os.system(
-                    f'uv run anybadge -l unittest -v "{unittest_results}" -f "{IMG_PATH}/unittest.svg" --color={warn}'
-                )
-            else:
-                os.system(
-                    f'uv run anybadge -l unittest -v "{unittest_results}" -f "{IMG_PATH}/unittest.svg" --color={green}'
-                )
+    coverage_score = get_coverage_score()
+    if coverage_score:
+        Path(f"{IMG_PATH}/coverage.svg").unlink(missing_ok=True)
 
-    except Exception as exception:
-        print(str(exception))
-
-    print("Generating Coverage badge")
-    try:
-        coverage_score = get_coverage_score()
-        if coverage_score:
-            if "coverage.svg" in os.listdir(IMG_PATH):
-                os.remove(f"{IMG_PATH}/coverage.svg")
-
-            os.system(f'uv run anybadge --value={coverage_score} -f "{IMG_PATH}/coverage.svg" coverage')
-
-    except Exception as exception:
-        print(str(exception))
-
-    print("Generating Ruff badge")
-    try:
-        ruff_result = get_ruff_result()
-        if ruff_result:
-            if "pylint.svg" in os.listdir(IMG_PATH):
-                os.remove(f"{IMG_PATH}/ruff.svg")
-
-            color = "green" if ruff_result == "Passing" else "red"
-            os.system(f'uv run anybadge -l ruff -v "{ruff_result}" -f "{IMG_PATH}/ruff.svg" --color={color}')
-
-    except Exception as exception:
-        print(str(exception))
-
-    print("Generating Release badge")
-    try:
-        if "release.svg" in os.listdir(IMG_PATH):
-            os.remove(f"{IMG_PATH}/release.svg")
-
-        current_month = datetime.now().strftime("%b")
-        current_year = datetime.now().year
-
-        os.system(
-            f'uv run anybadge -l "released" -v "{current_month} {current_year}" -f "{IMG_PATH}/release.svg" --color="#0f5fa5"'
+        subprocess.run(
+            args=[
+                "uv",
+                "run",
+                "anybadge",
+                "-l",
+                "coverage",
+                "-v",
+                coverage_score,
+                "-f",
+                f"{IMG_PATH}/coverage.svg",
+            ],
+            check=True,
         )
 
-    except Exception as exception:
-        print(str(exception))
+    ruff_result = get_ruff_result()
+    if ruff_result:
+        Path(f"{IMG_PATH}/ruff.svg").unlink(missing_ok=True)
+
+        color = "green" if ruff_result == "Passing" else "red"
+        make_badge(
+            label="ruff",
+            value=ruff_result,
+            filename=f"{IMG_PATH}/ruff.svg",
+            color=color,
+        )
+
+    Path(f"{IMG_PATH}/release.svg").unlink(missing_ok=True)
+
+    current_month = datetime.now(tz=UTC).strftime("%b")
+    current_year = datetime.now(tz=UTC).year
+
+    make_badge(
+        label="released",
+        value=f"{current_month} {current_year}",
+        filename=f"{IMG_PATH}/release.svg",
+        color="#0f5fa5",
+    )
 
 
 if __name__ == "__main__":
