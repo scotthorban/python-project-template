@@ -5,7 +5,7 @@ This format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 This project adheres to [semantic versioning](https://semver.org/).
 
 ## 2.2.1
-- Updated `README.md`.
+- Updated `README.md` to add more info about project repo contents and to detail the use of `uv`.
 
 ## 2.2.0
 - Enables all ruff rulesets (including pydocstyle), disabling specific rules only.
