@@ -1,6 +1,6 @@
 [project]
 name = "python-project-template"
-version = "2.2.0"
+version = "2.2.1"
 description = "Python project template repository"
 authors = [
     {name="scotthorban", email="scotthorban@gmail.com"}
@@ -67,4 +67,4 @@ check-format = { cmd = "ruff format --diff", help = "View ruff formatting diff" 
 format = { cmd = "ruff format", help = "Format code using ruff" }
 badge = { cmd = "python generate_project_badges.py", help = "Generate project badges for README.md" }
 
-tests = { cmd = "task unit && task coverage && task check-lint && task check-format && task badge", help = "" }
+tests = { cmd = "task unit && task coverage && task check-lint && task check-format && task badge", help = "Run unit, coverage, check-lint, check-format and badge tasks in a single command" }
