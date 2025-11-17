@@ -1,6 +1,6 @@
 [project]
 name = "python-project-template"
-version = "2.3.0"
+version = "2.4.0"
 description = "Python project template repository"
 authors = [
     {name="scotthorban", email="scotthorban@gmail.com"}
@@ -8,12 +8,11 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.11.8"
 dependencies = [
-    "defusedxml>=0.7.1",
+    "common-py[utils]"
 ]
 
 [dependency-groups]
 dev = [
-    "anybadge>=1.16.0",
     "detect-secrets>=1.5.0",
     "pre-commit>=4.2.0",
     "pytest>=8.4.1",
@@ -23,6 +22,9 @@ dev = [
     "ty>=0.0.1a26",
     "typing-extensions>=4.14.1",
 ]
+
+[tool.uv.sources]
+common-py = { git = "ssh://git@github.com/scotthorban/common-py.git", rev = "v0.4.0" }
 
 [tool.ruff]
 line-length = 120
@@ -67,6 +69,6 @@ lint = { cmd = "ruff check --fix", help = "Run ruff linter and attempt to auto-f
 check-format = { cmd = "ruff format --diff", help = "View ruff formatting diff" }
 format = { cmd = "ruff format", help = "Format code using ruff" }
 check-types = { cmd = "ty check; ty check --output-format gitlab > reports/ty.json" }
-badge = { cmd = "python generate_project_badges.py", help = "Generate project badges for README.md" }
+badge = { cmd = "uv run generate-badges -o 'docs/img' -pv '>=3.11' -trp reports/unit-tests.xml -crp reports/coverage.xml -rrp reports/ruff.json -tyrp reports/ty.json -rb true", help = "Generate project badges for README.md" }
 
 tests = { cmd = "task unit && task coverage && task check-lint && task check-format && task check-types && task badge", help = "Run unit, coverage, check-lint, check-format and badge tasks in a single command" }
