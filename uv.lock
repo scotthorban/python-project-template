@@ -90,6 +90,17 @@ wheels = [
 ]
 
 [[package]]
+name = "common-py"
+version = "0.4.0"
+source = { git = "ssh://git@github.com/scotthorban/common-py.git?rev=v0.4.0#ae80fc76a44c4d10e94a8e5b37666acb367f8b4a" }
+
+[package.optional-dependencies]
+utils = [
+    { name = "anybadge" },
+    { name = "defusedxml" },
+]
+
+[[package]]
 name = "coverage"
 version = "7.10.2"
 source = { registry = "https://pypi.org/simple" }
@@ -348,15 +359,14 @@ wheels = [
 
 [[package]]
 name = "python-project-template"
-version = "2.3.0"
+version = "2.4.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "defusedxml" },
+    { name = "common-py", extra = ["utils"] },
 ]
 
 [package.dev-dependencies]
 dev = [
-    { name = "anybadge" },
     { name = "detect-secrets" },
     { name = "pre-commit" },
     { name = "pytest" },
@@ -368,11 +378,10 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "defusedxml", specifier = ">=0.7.1" }]
+requires-dist = [{ name = "common-py", extras = ["utils"], git = "ssh://git@github.com/scotthorban/common-py.git?rev=v0.4.0" }]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "anybadge", specifier = ">=1.16.0" },
     { name = "detect-secrets", specifier = ">=1.5.0" },
     { name = "pre-commit", specifier = ">=4.2.0" },
     { name = "pytest", specifier = ">=8.4.1" },
