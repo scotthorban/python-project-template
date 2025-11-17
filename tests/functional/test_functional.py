@@ -11,7 +11,7 @@ class TestFunctional:
 
     class_variable = EXPECTED_CLASS_VARIABLE
 
-    def test_example(self, input_values: str, expected_result: int) -> None:
+    def test_example(self, input_values: list[int], expected_result: int) -> None:
         """Example Functional test."""
         assert self.class_variable == EXPECTED_CLASS_VARIABLE
         assert sum(input_values) == expected_result
