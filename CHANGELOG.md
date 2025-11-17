@@ -4,6 +4,10 @@ All changes to this project will be documented in this file.
 This format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [semantic versioning](https://semver.org/).
 
+## 2.4.0
+- [#13](https://github.com/scotthorban/python-project-template/issues/13) - Adds `common-py` as a dependency.
+- [#13](https://github.com/scotthorban/python-project-template/issues/13) - Use `common-py` for project badge generation.
+
 ## 2.3.0
 - [#12](https://github.com/scotthorban/python-project-template/issues/12) - Adds `ty` for type checking purposes.
 
