@@ -1,6 +1,6 @@
 [project]
 name = "python-project-template"
-version = "2.2.1"
+version = "2.3.0"
 description = "Python project template repository"
 authors = [
     {name="scotthorban", email="scotthorban@gmail.com"}
@@ -20,6 +20,7 @@ dev = [
     "pytest-cov>=6.2.1",
     "ruff>=0.12.8",
     "taskipy>=1.14.1",
+    "ty>=0.0.1a26",
     "typing-extensions>=4.14.1",
 ]
 
@@ -65,6 +66,7 @@ check-lint = { cmd = "ruff check; ruff check --output-file reports/ruff.json --o
 lint = { cmd = "ruff check --fix", help = "Run ruff linter and attempt to auto-fix issues" }
 check-format = { cmd = "ruff format --diff", help = "View ruff formatting diff" }
 format = { cmd = "ruff format", help = "Format code using ruff" }
+check-types = { cmd = "ty check; ty check --output-format gitlab > reports/ty.json" }
 badge = { cmd = "python generate_project_badges.py", help = "Generate project badges for README.md" }
 
-tests = { cmd = "task unit && task coverage && task check-lint && task check-format && task badge", help = "Run unit, coverage, check-lint, check-format and badge tasks in a single command" }
+tests = { cmd = "task unit && task coverage && task check-lint && task check-format && task check-types && task badge", help = "Run unit, coverage, check-lint, check-format and badge tasks in a single command" }
