@@ -1,10 +1,7 @@
 [project]
 name = "python-project-template"
 version = "2.4.0"
-description = "Python project template repository"
-authors = [
-    {name="scotthorban", email="161889944+scotthorban@users.noreply.github.com"}
-]
+description = "Python project template repository using uv, ruff, ty and the common-py library"
 readme = "README.md"
 requires-python = ">=3.11.8"
 dependencies = [
@@ -59,10 +56,10 @@ line-ending = "auto"
 [tool.taskipy.tasks]
 install-hooks = { cmd = "pre-commit install --hook-type pre-commit --hook-type commit-msg", help = "Install all pre-commit hooks stored in .git-hooks" }
 
-detect-secrets-scan = { cmd = "detect-secrets scan --baseline .secrets.baseline.json", help = """Updates the .secrets.baseline.json file with any newly detected secrets"""}
-audit-secrets = { cmd = "detect-secrets audit .secrets.baseline.json", help = """Runs a command line tool to allow the user to manually flag detected secrets as false positives"""}
+detect-secrets-scan = { cmd = "detect-secrets scan --baseline .secrets.baseline.json", help = """Updates the .secrets.baseline.json file with any newly detected secrets""" }
+audit-secrets = { cmd = "detect-secrets audit .secrets.baseline.json", help = """Runs a command line tool to allow the user to manually flag detected secrets as false positives""" }
 
-unit = { cmd = "pytest -v tests/unit tests/functional --show-capture=no --disable-pytest-warnings --junitxml=reports/unit-tests.xml", help = "Run unit tests"}
+unit = { cmd = "pytest -v tests/unit tests/functional --show-capture=no --disable-pytest-warnings --junitxml=reports/unit-tests.xml", help = "Run unit tests" }
 coverage = { cmd = "pytest --cov src tests/unit tests/functional --cov-config=.coveragerc --cov-report term-missing --cov-fail-under=80 --cov-report xml:reports/coverage.xml", help = "Run unit test coverage" }
 check-lint = { cmd = "ruff check; ruff check --output-file reports/ruff.json --output-format json", help = "Run ruff linter" }
 lint = { cmd = "ruff check --fix", help = "Run ruff linter and attempt to auto-fix issues" }
