@@ -5,6 +5,10 @@ All changes to this project will be documented in this file.
 This format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [semantic versioning](https://semver.org/).
 
+## 2.4.2
+
+- [#16](https://github.com/scotthorban/python-project-template/issues/16) - Add and apply `.gitattributes`.
+
 ## 2.4.1
 
 - [#19](https://github.com/scotthorban/python-project-template/issues/19) - Update ruff, ty and common-py to latest
