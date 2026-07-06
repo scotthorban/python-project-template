@@ -20,7 +20,7 @@ jobs:
         uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
-          version: ">=0.8.6"
+          version: ">=0.11.26"
       - name: Set up SSH for accessing common-py
         run: |
           mkdir -p ~/.ssh
@@ -44,7 +44,7 @@ jobs:
           if git status | grep -q modified; then
             echo "Committing updated project badges to ${CURRENT_BRANCH}"
             git add docs/img/
-            git commit -m "chore: refresh project badges [skip ci]"
+            git commit -m "chore: refresh project badges"
             git push
             echo "Changes committed to ${CURRENT_BRANCH} successfully! Exiting."
           else
