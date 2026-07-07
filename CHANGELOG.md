@@ -5,6 +5,10 @@ All changes to this project will be documented in this file.
 This format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [semantic versioning](https://semver.org/).
 
+## 2.4.3
+
+- [#17](https://github.com/scotthorban/python-project-template/issues/17) - Migrate from pre-commit to prek.
+
 ## 2.4.2
 
 - [#16](https://github.com/scotthorban/python-project-template/issues/16) - Add and apply `.gitattributes`.
